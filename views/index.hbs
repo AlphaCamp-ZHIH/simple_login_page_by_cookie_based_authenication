@@ -10,8 +10,8 @@
       <input type="password" name="password" id="password" placeholder="Password" class="w-100">
     </label>
     <button type="submit" class="col-12 btn btn-primary">sign in</button>
-    {{#if filled}}
-    <p class="text-danger">please enter your email and password</p>
+    {{#if wrongMessage}}
+    <p class="text-danger">{{message}}</p>
     {{/if}}
   </form>
 

@@ -6,13 +6,13 @@ const accountsData = require("./accounts.json");
 
 const app = express();
 
-// console.log(accountsData);
+const port = 3000;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine("hbs", exphbs({ defaultLayout: "main", extname: "hbs" }));
 app.set("view engine", "hbs");
 
-app.get("/", (req, res) => {
+app.get("/login", (req, res) => {
   res.render("index", { pageTitle: "login" });
 });
 
@@ -24,24 +24,31 @@ app.post("/login", (req, res) => {
   let message = "";
   // let status = "false"
   if (!req.body.account || !req.body.password) {
-    let filled = "NO";
-    return res.render("index", { pageTitle: "login", filled });
+    message = "Please enter your email and password";
+    wrongMessage = "yes";
   }
   if (user) {
     if (user.password === password) {
-      status = "successful";
-      message = `Welcome back, ${user.firstName}`;
+      return res.redirect(`/${user.firstName}`);
+    } else if (!req.body.password) {
+      wrongMessage = "yes";
+      message = "Please enter your  password";
     } else {
-      message = "password wrong";
+      wrongMessage = "yes";
+      message = "your password is wrong";
     }
   } else {
-    message = "no account";
+    wrongMessage = "yes";
+    message = "no account exits";
   }
-  res.render("login", { pageTitle: "login", message });
+  return res.render("index", { pageTitle: "login", message, wrongMessage });
 });
 
-const port = 3000;
-
+app.get("/:name", (req, res) => {
+  const name = req.params.name;
+  console.log(name)
+  res.render("login", { pageTitle: name, message: name });
+});
 app.listen(port, () => {
   console.log(`operate http://localhost:${port}`);
 });
