@@ -34,7 +34,7 @@ app.post("/login", (req, res) => {
     if (user.password === password) {
       //sign data in session to identify login or not
       req.session.name = user.firstName;
-      return res.redirect(`/${user.firstName}`);
+      return res.redirect("/user");
     } else {
       wrongMessage = "yes";
       message = "your password is wrong";
@@ -43,14 +43,17 @@ app.post("/login", (req, res) => {
     wrongMessage = "yes";
     message = "account don't exist";
   }
-  return res.render("index", { pageTitle: "login", email,message, wrongMessage });
+  return res.render("index", { pageTitle: "login", email, message, wrongMessage });
 });
 
-app.get("/:name", (req, res) => {
-  const name = req.params.name;
+app.get("/user", (req, res) => {
   //if req includes singed data , transfer to /name
-  if (req.session.name === name) {
-    res.render("loginSuccess", { pageTitle: name, message: name });
+  // console.log(req.session.name)
+  const target = req.session.name;
+  const user = accountsData.find( account => account.firstName = target);
+  if (user ) {
+    const name = user.firstName;
+    res.render("user", { pageTitle: name, message: name });
   } else {
     //if not , back to login page
     res.redirect("/login");
@@ -59,3 +62,7 @@ app.get("/:name", (req, res) => {
 app.listen(port, () => {
   console.log(`operate http://localhost:${port}`);
 });
+app.get('/logout', (req ,res) =>{
+  req.session.name = undefined;
+  res.redirect('/login');
+})
