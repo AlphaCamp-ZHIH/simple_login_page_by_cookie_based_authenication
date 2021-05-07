@@ -49,7 +49,7 @@ app.post("/login", (req, res) => {
 app.get("/:name", (req, res) => {
   const name = req.params.name;
   //if req includes singed data , transfer to /name
-  if (req.session.name) {
+  if (req.session.name === name) {
     res.render("loginSuccess", { pageTitle: name, message: name });
   } else {
     //if not , back to login page
