@@ -3,13 +3,13 @@
   <form action="/login" method="POST" class="row flex-column no-gutters">
     <h1 class="col-12 text-center mb-4">Account login</h1>
     <label for="account" class="col-12  pb-2 mb-3">
-      <input type="text" name="account" id="account" placeholder="Email" class="w-100">
+      <input type="email" name="email" id="email" placeholder="Email" class="w-100" value="{{email}}" required>
     </label>
     <label for="password" class="col-12  pb-2 mb-3">
 
-      <input type="password" name="password" id="password" placeholder="Password" class="w-100">
+      <input type="password" name="password" id="password" placeholder="Password" class="w-100" required>
     </label>
-    <button type="submit" class="col-12 btn btn-primary">sign in</button>
+    <button type="submit" class="col-12 btn btn-secondary">Log in</button>
     {{#if wrongMessage}}
     <p class="text-danger">{{message}}</p>
     {{/if}}

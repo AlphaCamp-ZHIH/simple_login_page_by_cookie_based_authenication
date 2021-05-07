@@ -16,6 +16,8 @@ app.set("view engine", "hbs");
 app.use(
   session({
     secret: "keyboard cat",
+    saveUninitialized: true,
+    resave: false,
     cookie: {},
   })
 );
@@ -25,39 +27,30 @@ app.get("/login", (req, res) => {
 });
 //post email and password
 app.post("/login", (req, res) => {
-  const email = req.body.account;
-  const password = req.body.password;
+  const { email, password } = req.body
   const user = accountsData.find((account) => account.email === email);
   let message = "";
-
-  if (!req.body.account || !req.body.password) {
-    message = "Please enter your email and password";
-    wrongMessage = "yes";
-  }
   if (user) {
     if (user.password === password) {
       //sign data in session to identify login or not
       req.session.name = user.firstName;
       return res.redirect(`/${user.firstName}`);
-    } else if (!req.body.password) {
-      wrongMessage = "yes";
-      message = "Please enter your  password";
     } else {
       wrongMessage = "yes";
       message = "your password is wrong";
     }
   } else {
     wrongMessage = "yes";
-    message = "no account exits";
+    message = "account don't exist";
   }
-  return res.render("index", { pageTitle: "login", message, wrongMessage });
+  return res.render("index", { pageTitle: "login", email,message, wrongMessage });
 });
 
 app.get("/:name", (req, res) => {
   const name = req.params.name;
   //if req includes singed data , transfer to /name
   if (req.session.name) {
-    res.render("login", { pageTitle: name, message: name });
+    res.render("loginSuccess", { pageTitle: name, message: name });
   } else {
     //if not , back to login page
     res.redirect("/login");
